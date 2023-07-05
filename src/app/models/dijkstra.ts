@@ -1,5 +1,5 @@
-import { VirtualTimeScheduler } from 'rxjs';
 import { Edge } from './edge';
+import { MinIndexedDHeap } from './min-indexed-d-heap';
 
 export class Dijkstra {
   private n: number;
@@ -39,7 +39,7 @@ export class Dijkstra {
     this.previousNodes = new Array<number>();
 
     while (minQ.isEmpty() == false) {
-      let nodeId: number = minQ.peekMin() as number;
+      let nodeId: number = minQ.peekMinIndex() as number;
       visited[nodeId] = true;
 
       let minValue = minQ.poll() as number;
@@ -57,5 +57,23 @@ export class Dijkstra {
       });
       if (nodeId == end) return this.distances[end];
     }
+    return Number.POSITIVE_INFINITY;
+  }
+
+  public reconstructPath(start: number, end: number): Array<number> {
+    if (end < 0 || end >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    if (start < 0 || start >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    let path = new Array<number>();
+    let dist = this.dijkstra(start, end);
+    if (dist == Number.POSITIVE_INFINITY) return path;
+    for (let at = end; at != null; at = this.previousNodes[at]) {
+      path.push(at);
+    }
+    path = path.reverse();
+    return path;
   }
 }

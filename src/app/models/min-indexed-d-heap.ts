@@ -1,4 +1,4 @@
-class MinIndexedDHeap<T> {
+export class MinIndexedDHeap<T> {
   private heap: [number, T][];
   private indexMap: Map<number, number>;
   private d: number;
@@ -141,6 +141,10 @@ class MinIndexedDHeap<T> {
 
   public peekMin(): T | undefined {
     return this.heap.length > 0 ? this.heap[0][1] : undefined;
+  }
+
+  public peekMinIndex(): number | undefined {
+    return this.heap.length > 0 ? this.heap[0][0] : undefined;
   }
 
   public contains(index: number): boolean {
