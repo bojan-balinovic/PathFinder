@@ -22,6 +22,17 @@ export class Dijkstra {
     this.edgeCount++;
     this.graph[from].push(new Edge(to, cost));
   }
+
+  updateEdge(from: number, to: number, cost: number) {
+    this.edgeCount++;
+    let idx = this.graph[from].findIndex((e) => e.to == to);
+    this.graph[from][idx] = new Edge(to, cost);
+  }
+  removeEdge(from: number, to: number) {
+    let idx = this.graph[from].findIndex((e) => e.to == to);
+    this.graph[from].splice(idx, 1);
+  }
+
   getGraph() {
     return this.graph;
   }
@@ -49,7 +60,7 @@ export class Dijkstra {
         let newDist = this.distances[nodeId] + edge.cost;
         if (newDist < this.distances[edge.to]) {
           this.previousNodes[edge.to] = nodeId;
-          this.distances[edge.to] = nodeId;
+          this.distances[edge.to] = newDist;
 
           if (!minQ.contains(edge.to)) minQ.insert(edge.to, newDist);
           else minQ.decrease(edge.to, newDist);
