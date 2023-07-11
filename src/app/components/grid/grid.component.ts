@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Dijkstra } from 'src/app/models/dijkstra';
 import * as p5 from 'p5';
+import { NodeUI } from 'src/app/models/node-ui';
 
 @Component({
   selector: 'app-grid',
@@ -16,10 +17,28 @@ export class GridComponent implements OnInit {
   rectHeight = 40;
   dijkstra: Dijkstra;
   path: number[];
+  nodes: NodeUI[] = new Array<NodeUI>();
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    let index = 0;
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.cols; j++) {
+        let x = j * this.rectWidth;
+        let y = i * this.rectHeight;
+        let node = new NodeUI({
+          x: x,
+          y: y,
+          index: index,
+          row: i,
+          col: j,
+        });
+        index += 1;
+        this.nodes.push(node);
+      }
+    }
+  }
 
   ngAfterViewInit() {
     this.createP5Sketch();
@@ -39,23 +58,20 @@ export class GridComponent implements OnInit {
     this.p5Instance = new p5(sketch);
   }
   drawRects(p: p5) {
-    let index = 0;
-    for (let i = 0; i < this.rows; i++) {
-      for (let j = 0; j < this.cols; j++) {
-        let x = j * this.rectWidth;
-        let y = i * this.rectHeight;
-        if (this.path?.includes(index)) {
-          p.fill(0);
-        } else {
-          p.fill(255);
-        }
-        p.stroke(0);
-        p.rect(x, y, this.rectWidth, this.rectHeight);
-
-        p.stroke(255, 0, 0);
-        p.text(index++, x + 10, y + 10);
+    this.nodes.forEach((node: NodeUI) => {
+      if (!node.accessible) {
+        p.fill(255, 0, 0);
+      } else if (this.path?.includes(node.index)) {
+        p.fill(0);
+      } else {
+        p.fill(255);
       }
-    }
+      p.stroke(0);
+      p.rect(node.x, node.y, this.rectWidth, this.rectHeight);
+
+      p.stroke(0, 80, 0);
+      p.text(node.index, node.x + 5, node.y + 10);
+    });
   }
   addEdges() {
     this.dijkstra = new Dijkstra(this.rows * this.cols);
@@ -77,9 +93,12 @@ export class GridComponent implements OnInit {
         index += 1;
       }
     }
-    this.dijkstra.removeEdge(3, 4);
-    this.dijkstra.removeEdge(5, 4);
-    this.dijkstra.removeEdge(14, 4);
+    // this.dijkstra.removeEdge(3, 4);
+    // this.dijkstra.removeEdge(5, 4);
+    // this.dijkstra.removeEdge(14, 4);
+    //this.dijkstra.updateEdge(3, 4, Infinity);
+    // this.dijkstra.updateEdge(5, 4, Infinity);
+    // this.dijkstra.updateEdge(14, 4, Infinity);
   }
   mouseClicked(p: p5) {
     let row = Math.floor(p.mouseY / this.rectHeight);
@@ -87,6 +106,9 @@ export class GridComponent implements OnInit {
 
     if (row < this.rows && col < this.cols) {
       console.log('Clicked on rectangle at row:', row, 'column:', col);
+      this.nodes
+        .find((n) => n.row == row && n.col == col)
+        ?.toggleAccessibility(this.dijkstra);
       // Add your click event logic here
     }
   }

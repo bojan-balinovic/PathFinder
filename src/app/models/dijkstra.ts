@@ -5,7 +5,7 @@ export class Dijkstra {
   private n: number;
   private distances: Array<number>;
   private previousNodes: Array<number>;
-  private graph: Array<Array<Edge>>;
+  public graph: Array<Array<Edge>>;
   private edgeCount: number = 0;
 
   constructor(n: number) {
@@ -30,6 +30,7 @@ export class Dijkstra {
   }
   removeEdge(from: number, to: number) {
     let idx = this.graph[from].findIndex((e) => e.to == to);
+    if (idx == -1) return;
     this.graph[from].splice(idx, 1);
   }
 
