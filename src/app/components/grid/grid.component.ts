@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Dijkstra } from 'src/app/models/dijkstra';
 import * as p5 from 'p5';
 import { NodeUI } from 'src/app/models/node-ui';
+import { Algorithm } from 'src/app/abstract-models/algorithm';
 
 @Component({
   selector: 'app-grid',
@@ -15,9 +16,10 @@ export class GridComponent implements OnInit {
   cols = 10;
   rectWidth = 40;
   rectHeight = 40;
-  dijkstra: Dijkstra;
   path: number[];
   nodes: NodeUI[] = new Array<NodeUI>();
+  selectedAlgorithm: Algorithm;
+  availableAlgorithms: [{ name: string; algorithm: Algorithm }];
 
   constructor() {}
 
@@ -38,6 +40,10 @@ export class GridComponent implements OnInit {
         this.nodes.push(node);
       }
     }
+    this.availableAlgorithms = [
+      { name: 'Dijkstra', algorithm: new Dijkstra(this.nodes.length) },
+    ];
+    this.setAlgorithm(this.availableAlgorithms[0].algorithm);
   }
 
   ngAfterViewInit() {
@@ -74,21 +80,21 @@ export class GridComponent implements OnInit {
     });
   }
   addEdges() {
-    this.dijkstra = new Dijkstra(this.rows * this.cols);
+    let alg = this.selectedAlgorithm;
     let index = 0;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         if (j + 1 < this.cols) {
-          this.dijkstra.addEdge(index, index + 1, 1);
+          alg.addEdge(index, index + 1, 1);
         }
         if (j > 0) {
-          this.dijkstra.addEdge(index, index - 1, 1);
+          alg.addEdge(index, index - 1, 1);
         }
         if (i > 0) {
-          this.dijkstra.addEdge(index, index - this.cols, 1);
+          alg.addEdge(index, index - this.cols, 1);
         }
         if (i + 1 < this.rows) {
-          this.dijkstra.addEdge(index, index + this.cols, 1);
+          alg.addEdge(index, index + this.cols, 1);
         }
         index += 1;
       }
@@ -108,13 +114,16 @@ export class GridComponent implements OnInit {
       console.log('Clicked on rectangle at row:', row, 'column:', col);
       this.nodes
         .find((n) => n.row == row && n.col == col)
-        ?.toggleAccessibility(this.dijkstra);
+        ?.toggleAccessibility(this.selectedAlgorithm);
       // Add your click event logic here
     }
   }
 
   findPath() {
-    this.path = this.dijkstra.reconstructPath(0, 99);
+    this.path = this.selectedAlgorithm.findShortestPath(0, 99);
     console.log(this.path);
+  }
+  setAlgorithm(algorithm: Algorithm) {
+    this.selectedAlgorithm = algorithm;
   }
 }

@@ -1,6 +1,5 @@
 import { NodeUIData } from '../interfaces/node-ui-data';
-import { Graph } from 'src/app/types/graph';
-import { Dijkstra } from './dijkstra';
+import { Algorithm } from '../abstract-models/algorithm';
 
 export class NodeUI implements NodeUIData {
   index: number;
@@ -14,12 +13,13 @@ export class NodeUI implements NodeUIData {
     Object.assign(this, props);
   }
 
-  toggleAccessibility(dijkstra: Dijkstra) {
+  toggleAccessibility(algorithm: Algorithm) {
     this.accessible = !this.accessible;
     let cost = this.accessible ? 1 : Infinity;
-    dijkstra.graph.forEach((node, nodeIndex) => {
-      if (dijkstra.graph[nodeIndex].find((edge) => edge.to == this.index)) {
-        dijkstra.updateEdge(nodeIndex, this.index, cost);
+    let graph = algorithm.getGraph();
+    graph.forEach((node, nodeIndex) => {
+      if (graph[nodeIndex].find((edge) => edge.to == this.index)) {
+        algorithm.updateEdge(nodeIndex, this.index, cost);
       }
     });
   }

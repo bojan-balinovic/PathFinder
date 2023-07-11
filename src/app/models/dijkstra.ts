@@ -1,42 +1,12 @@
+import { Algorithm } from '../abstract-models/algorithm';
 import { Edge } from './edge';
 import { MinIndexedDHeap } from './min-indexed-d-heap';
 
-export class Dijkstra {
-  private n: number;
-  private distances: Array<number>;
-  private previousNodes: Array<number>;
-  public graph: Array<Array<Edge>>;
-  private edgeCount: number = 0;
-
+export class Dijkstra extends Algorithm {
   constructor(n: number) {
-    this.n = n;
-    this.createEmptyGraph();
+    super(n);
   }
 
-  createEmptyGraph() {
-    this.graph = new Array();
-    for (let i = 0; i < this.n; i++) this.graph[i] = new Array<Edge>();
-  }
-
-  addEdge(from: number, to: number, cost: number) {
-    this.edgeCount++;
-    this.graph[from].push(new Edge(to, cost));
-  }
-
-  updateEdge(from: number, to: number, cost: number) {
-    this.edgeCount++;
-    let idx = this.graph[from].findIndex((e) => e.to == to);
-    this.graph[from][idx] = new Edge(to, cost);
-  }
-  removeEdge(from: number, to: number) {
-    let idx = this.graph[from].findIndex((e) => e.to == to);
-    if (idx == -1) return;
-    this.graph[from].splice(idx, 1);
-  }
-
-  getGraph() {
-    return this.graph;
-  }
   dijkstra(start: number, end: number) {
     let degree = this.edgeCount / this.n;
     let minQ = new MinIndexedDHeap<number>(this.n);
@@ -72,7 +42,7 @@ export class Dijkstra {
     return Number.POSITIVE_INFINITY;
   }
 
-  public reconstructPath(start: number, end: number): Array<number> {
+  public findShortestPath(start: number, end: number): Array<number> {
     if (end < 0 || end >= this.n) {
       throw new Error('Invalid node index');
     }
