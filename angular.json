@@ -25,7 +25,10 @@
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": ["p5"],
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "node_modules/@clr/ui/clr-ui.min.css",
+              "src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {

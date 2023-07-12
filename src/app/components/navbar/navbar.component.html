@@ -1,0 +1,13 @@
+<div class="navbar">
+  <div class="center-container">
+    <mat-form-field>
+      <mat-label>Select algorithm</mat-label>
+      <mat-select [value]="selectedAlgorithm" (ngModelChange)="changeAlgorithm($event)">
+        <mat-option>None</mat-option>
+        <mat-option value="option1"></mat-option>
+        <mat-option value="option2">Option 2</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button (click)="shortestPathService.findShortestPath()">Find path</button>
+  </div>
+</div>

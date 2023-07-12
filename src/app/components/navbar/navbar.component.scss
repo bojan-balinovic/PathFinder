@@ -1,0 +1,13 @@
+.navbar{
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #2D5731, #254828);
+  position: relative;
+}
+
+.center-container{
+  position: absolute;
+  top: 50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+}
