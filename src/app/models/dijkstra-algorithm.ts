@@ -2,13 +2,30 @@ import { Algorithm } from '../abstract-models/algorithm';
 import { Edge } from './edge';
 import { MinIndexedDHeap } from './min-indexed-d-heap';
 
-export class Dijkstra extends Algorithm {
+export class DijkstraAlgorithm extends Algorithm {
+
   constructor(n: number) {
     super(n);
   }
 
+  public findShortestPath(start: number, end: number): Array<number> {
+    if (end < 0 || end >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    if (start < 0 || start >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    let path = new Array<number>();
+    let dist = this.dijkstra(start, end);
+    if (dist == Number.POSITIVE_INFINITY) return path;
+    for (let at = end; at != null; at = this.previousNodes[at]) {
+      path.push(at);
+    }
+    path = path.reverse();
+    return path;
+  }
+
   dijkstra(start: number, end: number) {
-    let degree = this.edgeCount / this.n;
     let minQ = new MinIndexedDHeap<number>(this.n);
     minQ.insert(start, 0);
 
@@ -17,8 +34,6 @@ export class Dijkstra extends Algorithm {
     this.distances[start] = 0;
 
     let visited = new Array<boolean>();
-
-    this.previousNodes = new Array<number>();
 
     while (minQ.isEmpty() == false) {
       let nodeId: number = minQ.peekMinIndex() as number;
@@ -40,22 +55,5 @@ export class Dijkstra extends Algorithm {
       if (nodeId == end) return this.distances[end];
     }
     return Number.POSITIVE_INFINITY;
-  }
-
-  public findShortestPath(start: number, end: number): Array<number> {
-    if (end < 0 || end >= this.n) {
-      throw new Error('Invalid node index');
-    }
-    if (start < 0 || start >= this.n) {
-      throw new Error('Invalid node index');
-    }
-    let path = new Array<number>();
-    let dist = this.dijkstra(start, end);
-    if (dist == Number.POSITIVE_INFINITY) return path;
-    for (let at = end; at != null; at = this.previousNodes[at]) {
-      path.push(at);
-    }
-    path = path.reverse();
-    return path;
   }
 }
