@@ -1,5 +1,6 @@
 import { NodeUIData } from '../interfaces/node-ui-data';
 import { Algorithm } from '../abstract-models/algorithm';
+import { GridComponent } from '../components/grid/grid.component';
 
 export class NodeUI implements NodeUIData {
   index: number;
@@ -7,6 +8,9 @@ export class NodeUI implements NodeUIData {
   y: number;
   row: number;
   col: number;
+  borderRadius: number = 0;
+  scale: number = 1;
+
   accessible?: boolean = true;
 
   constructor(props?: NodeUIData) {
@@ -22,5 +26,12 @@ export class NodeUI implements NodeUIData {
         algorithm.updateEdge(nodeIndex, this.index, cost);
       }
     });
+    if (!this.accessible) {
+      this.scale = 0;
+      this.borderRadius = GridComponent.rectHeight;
+    } else {
+      this.scale = 1;
+      this.borderRadius = 0;
+    }
   }
 }

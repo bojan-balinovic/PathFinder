@@ -3,7 +3,7 @@ import { Edge } from '../models/edge';
 export abstract class Algorithm {
   protected n: number;
   protected distances: Array<number>;
-  protected previousNodes: Array<number>;
+  protected previousNodes = new Array<number>();
   protected graph: Array<Array<Edge>>;
   protected edgeCount: number = 0;
 

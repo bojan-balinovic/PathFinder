@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Dijkstra } from 'src/app/models/dijkstra';
+import { DijkstraAlgorithm } from 'src/app/models/dijkstra-algorithm';
 import * as p5 from 'p5';
 import { NodeUI } from 'src/app/models/node-ui';
 import { Algorithm } from 'src/app/abstract-models/algorithm';
+import { BellmanFordAlgorithm } from 'src/app/models/bellman-ford-algorithm';
 
 @Component({
   selector: 'app-grid',
@@ -14,12 +15,12 @@ export class GridComponent implements OnInit {
   private p5Instance: p5;
   rows = 10;
   cols = 10;
-  rectWidth = 40;
-  rectHeight = 40;
+  public static rectWidth = 40;
+  public static rectHeight = 40;
   path: number[];
   nodes: NodeUI[] = new Array<NodeUI>();
   selectedAlgorithm: Algorithm;
-  availableAlgorithms: [{ name: string; algorithm: Algorithm }];
+  availableAlgorithms: Array<any>;
 
   constructor() {}
 
@@ -27,8 +28,8 @@ export class GridComponent implements OnInit {
     let index = 0;
     for (let i = 0; i < this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
-        let x = j * this.rectWidth;
-        let y = i * this.rectHeight;
+        let x = j * GridComponent.rectWidth;
+        let y = i * GridComponent.rectHeight;
         let node = new NodeUI({
           x: x,
           y: y,
@@ -41,9 +42,13 @@ export class GridComponent implements OnInit {
       }
     }
     this.availableAlgorithms = [
-      { name: 'Dijkstra', algorithm: new Dijkstra(this.nodes.length) },
+      { name: 'Dijkstra', algorithm: new DijkstraAlgorithm(this.nodes.length) },
+      {
+        name: 'Bellman-Ford',
+        algorithm: new BellmanFordAlgorithm(this.nodes.length),
+      },
     ];
-    this.setAlgorithm(this.availableAlgorithms[0].algorithm);
+    this.setAlgorithm(this.availableAlgorithms[1].algorithm);
   }
 
   ngAfterViewInit() {
@@ -51,15 +56,28 @@ export class GridComponent implements OnInit {
   }
   private createP5Sketch() {
     const sketch = (p: p5) => {
+      let prevMouseX = p.mouseX;
+      let prevMouseY = p.mouseY;
+      let mouseDragging = false;
+
       p.setup = () => {
         p.createCanvas(400, 400).parent(this.p5Canvas.nativeElement);
         this.addEdges();
+        p.mouseClicked = () => this.mouseClicked(p, mouseDragging);
+        p.mouseDragged = () => {
+          mouseDragging = true;
+          this.mouseDragged(p, prevMouseX, prevMouseY);
+        };
+        p.mouseReleased = () => {
+          mouseDragging = false;
+        };
       };
       p.draw = () => {
+        prevMouseX = p.mouseX;
+        prevMouseY = p.mouseY;
         p.background(220);
         this.drawRects(p);
       };
-      p.mouseClicked = () => this.mouseClicked(p);
     };
     this.p5Instance = new p5(sketch);
   }
@@ -67,14 +85,44 @@ export class GridComponent implements OnInit {
     this.nodes.forEach((node: NodeUI) => {
       if (!node.accessible) {
         p.fill(255, 0, 0);
+
+        // if ((node.borderRadius as number) > 0) {
+        //   (node.borderRadius as number) -= 5;
+        // } else {
+        //   node.borderRadius = 0;
+        // }
+
+        if (node.scale < 1) {
+          node.scale += 0.1;
+        } else {
+          node.scale = 1;
+        }
       } else if (this.path?.includes(node.index)) {
         p.fill(0);
       } else {
         p.fill(255);
       }
-      p.stroke(0);
-      p.rect(node.x, node.y, this.rectWidth, this.rectHeight);
+      p.push();
 
+      p.stroke(0);
+
+      p.translate(
+        node.x + GridComponent.rectWidth / 2,
+        node.y + GridComponent.rectHeight / 2
+      );
+      p.scale(node.scale);
+      p.rect(
+        -GridComponent.rectWidth / 2,
+        -GridComponent.rectHeight / 2,
+        GridComponent.rectWidth,
+        GridComponent.rectHeight
+      );
+      p.translate(
+        -node.x + GridComponent.rectWidth / 2,
+        -node.y + GridComponent.rectHeight / 2
+      );
+      p.pop();
+      p;
       p.stroke(0, 80, 0);
       p.text(node.index, node.x + 5, node.y + 10);
     });
@@ -106,9 +154,27 @@ export class GridComponent implements OnInit {
     // this.dijkstra.updateEdge(5, 4, Infinity);
     // this.dijkstra.updateEdge(14, 4, Infinity);
   }
-  mouseClicked(p: p5) {
-    let row = Math.floor(p.mouseY / this.rectHeight);
-    let col = Math.floor(p.mouseX / this.rectWidth);
+  mouseClicked(p: p5, mouseDragging: boolean) {
+    if (mouseDragging == true) return;
+    let row = Math.floor(p.mouseY / GridComponent.rectHeight);
+    let col = Math.floor(p.mouseX / GridComponent.rectWidth);
+
+    if (row < this.rows && col < this.cols) {
+      console.log('Clicked on rectangle at row:', row, 'column:', col);
+      this.nodes
+        .find((n) => n.row == row && n.col == col)
+        ?.toggleAccessibility(this.selectedAlgorithm);
+      // Add your click event logic here
+    }
+  }
+  mouseDragged(p: p5, prevMouseX: number, prevMouseY: number) {
+    let row = Math.floor(p.mouseY / GridComponent.rectHeight);
+    let col = Math.floor(p.mouseX / GridComponent.rectWidth);
+
+    let prevRow = Math.floor(prevMouseY / GridComponent.rectHeight);
+    let prevCol = Math.floor(prevMouseX / GridComponent.rectWidth);
+    console.log(prevRow, prevCol);
+    if (prevRow == row && prevCol == col) return;
 
     if (row < this.rows && col < this.cols) {
       console.log('Clicked on rectangle at row:', row, 'column:', col);

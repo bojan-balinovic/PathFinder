@@ -3,5 +3,6 @@ export interface NodeUIData {
     x: number;
     y: number;
     row:number;
-    col:number
+    col:number;
+    borderRadius?:number;
 }
