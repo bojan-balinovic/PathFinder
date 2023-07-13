@@ -12,6 +12,8 @@ export class BellmanFordAlgorithm extends Algorithm {
     while (current != start) {
       path.unshift(current);
       current = this.previousNodes[current];
+      console.log(path);
+      console.log(this.previousNodes)
       if (current == undefined || current == -1) {
         throw new Error('No path');
       }

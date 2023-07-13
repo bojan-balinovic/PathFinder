@@ -1,13 +1,20 @@
-.navbar{
+.navbar {
   height: 100%;
   width: 100%;
-  background: linear-gradient(90deg, #2D5731, #254828);
+  background: linear-gradient(90deg, #009688, #006f64);
   position: relative;
 }
 
-.center-container{
+.center-container {
   position: absolute;
   top: 50%;
-  left:50%;
-  transform: translate(-50%,-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #b3ceb6;
+  width: 100%;
+  padding: 2em;
+  min-height: 16em;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }

@@ -1,0 +1,20 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$path-finder-theme-primary: mat.define-palette(mat.$teal-palette,500);
+$path-finder-theme-accent: mat.define-palette(mat.$green-palette,A200, A100, A400);
+$path-finder-theme-warning: mat.define-palette(mat.$red-palette);
+
+$path-finder-theme: mat.define-light-theme(
+  (
+    color: (
+      primary:$path-finder-theme-primary,
+      accent:$path-finder-theme-accent,
+      warning:$path-finder-theme-warning,
+    ),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($path-finder-theme);

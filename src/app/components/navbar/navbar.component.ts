@@ -13,12 +13,9 @@ export class NavbarComponent implements OnInit {
   constructor(public shortestPathService: ShortestPathService) {}
 
   ngOnInit(): void {
-    this.shortestPathService.selectedAlgorithm.subscribe((sa: Algorithm) => {
-      this.selectedAlgorithm = sa;
-    });
+    this.selectedAlgorithm = this.shortestPathService.selectedAlgorithm;
   }
-  changeAlgorithm(e: Event) {
-    console.log(e);
-    //this.shortestPathService.selectedAlgorithm.next();
+  changeAlgorithm(algorithm: Algorithm) {
+    this.shortestPathService.setAlgorithm(algorithm);
   }
 }

@@ -5,14 +5,23 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GridComponent } from './components/grid/grid.component';
 
-import { ClarityModule } from '@clr/angular';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent, GridComponent, NavbarComponent],
-  imports: [BrowserModule,BrowserAnimationsModule, AppRoutingModule, ClarityModule, MatSelectModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    MatSelectModule,
+    MatButtonModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
