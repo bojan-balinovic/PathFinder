@@ -15,7 +15,7 @@ export class GridComponent implements OnInit {
   @ViewChild('p5Canvas', { static: true }) p5Canvas: ElementRef;
   private p5Instance: p5;
   public static rows = 20;
-  public static cols = 20;
+  public static cols = 30;
   public static rectWidth: number = 38;
   public static rectHeight: number = 48;
   selectedAlgorithm: Algorithm;
@@ -48,8 +48,8 @@ export class GridComponent implements OnInit {
       // SETUP P5 SKETCH
       p.setup = () => {
         p.createCanvas(
-          this.p5Canvas.nativeElement.offsetWidth - 10,
-          this.p5Canvas.nativeElement.offsetHeight - 10
+          this.p5Canvas.nativeElement.offsetWidth-10,
+          this.p5Canvas.nativeElement.offsetHeight-10
         ).parent(this.p5Canvas.nativeElement);
 
         p.mouseClicked = () => this.mouseClicked(p, mouseDragging);
@@ -68,6 +68,19 @@ export class GridComponent implements OnInit {
         prevMouseY = p.mouseY;
         p.background(255);
         this.drawRects(p);
+      };
+      p.windowResized = () => {
+        p.resizeCanvas(
+          this.p5Canvas.nativeElement.offsetWidth-10,
+          this.p5Canvas.nativeElement.offsetHeight-10
+        );
+        GridComponent.rectWidth = Math.floor(
+          this.p5Canvas.nativeElement.offsetWidth / GridComponent.cols
+        );
+        GridComponent.rectHeight = Math.floor(
+          this.p5Canvas.nativeElement.offsetHeight / GridComponent.rows
+        );
+        this.refreshNodesXY();
       };
     };
     this.p5Instance = new p5(sketch);
@@ -131,6 +144,17 @@ export class GridComponent implements OnInit {
         });
         index += 1;
         this.nodes.push(node);
+      }
+    }
+  }
+  refreshNodesXY() {
+    let index = 0;
+    for (let i = 0; i < GridComponent.rows; i++) {
+      for (let j = 0; j < GridComponent.cols; j++) {
+        this.nodes[index].x = j * GridComponent.rectWidth;
+        this.nodes[index].y = i * GridComponent.rectHeight;
+        console.log(this.nodes[index]);
+        index += 1;
       }
     }
   }
