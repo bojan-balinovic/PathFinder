@@ -3,12 +3,13 @@ import { Edge } from './edge';
 import { MinIndexedDHeap } from './min-indexed-d-heap';
 
 export class DijkstraAlgorithm extends Algorithm {
-
   constructor(n: number) {
     super(n);
   }
 
   public findShortestPath(start: number, end: number): Array<number> {
+    this.previousNodes = [];
+
     if (end < 0 || end >= this.n) {
       throw new Error('Invalid node index');
     }
