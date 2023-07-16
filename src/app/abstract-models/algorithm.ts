@@ -36,6 +36,12 @@ export abstract class Algorithm {
   getGraph() {
     return this.graph;
   }
+  setGraph(graph: Array<Array<Edge>>) {
+    this.graph = graph;
+  }
 
-  abstract findShortestPath(start: number, end: number): Array<number>;
+  abstract findShortestPath(
+    start: number,
+    end: number
+  ): Array<number>;
 }

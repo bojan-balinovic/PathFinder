@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DijkstraAlgorithm } from '../models/dijkstra-algorithm';
 import { BellmanFordAlgorithm } from '../models/bellman-ford-algorithm';
-import { NodeUI } from '../models/node-ui';
 import { GridComponent } from '../components/grid/grid.component';
 import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
 import { Algorithm } from '../abstract-models/algorithm';
@@ -10,32 +9,40 @@ import { Algorithm } from '../abstract-models/algorithm';
   providedIn: 'root',
 })
 export class ShortestPathService {
-  availableAlgorithms: Array<any>;
+  private totalNumberOfNodes = GridComponent.rows * GridComponent.cols;
+
+  public availableAlgorithms: Array<any>;
   public selectedAlgorithm: Algorithm;
-  path: number[];
+  public path: number[];
+  public startNode: number = 305; // COULD BE ANY NUMBER |V|
+  public endNode: number = 324; // COULD BE ANY NUMBER |V|
 
   constructor() {
-    let totalNumberOfNodes = GridComponent.rows * GridComponent.cols;
-
-    this.availableAlgorithms = [
-      {
-        name: 'Dijkstra',
-        algorithm: new DijkstraAlgorithm(totalNumberOfNodes),
-      },
-      {
-        name: 'Bellman-Ford',
-        algorithm: new BellmanFordAlgorithm(totalNumberOfNodes),
-      },
-    ];
-    this.selectedAlgorithm = this.availableAlgorithms[0].algorithm;
+    this.initAvailableAlgorithms();
 
     this.setAlgorithm(this.availableAlgorithms[0].algorithm);
 
     this.addEdges();
   }
 
+  initAvailableAlgorithms() {
+    this.availableAlgorithms = [
+      {
+        name: 'Dijkstra',
+        algorithm: new DijkstraAlgorithm(this.totalNumberOfNodes),
+      },
+      {
+        name: 'Bellman-Ford',
+        algorithm: new BellmanFordAlgorithm(this.totalNumberOfNodes),
+      },
+    ];
+  }
+
   setAlgorithm(alg: Algorithm) {
+    // PRESERVE GRAPH AND THAN CHANGE SELECTED ALGORITHM
+    const graph = this.selectedAlgorithm?.getGraph();
     this.selectedAlgorithm = alg;
+    if (graph) this.selectedAlgorithm.setGraph(graph);
   }
 
   addEdges() {
@@ -60,9 +67,19 @@ export class ShortestPathService {
     }
   }
 
+  // MAIN BUSINESS LOGIC
   findShortestPath() {
-    this.path = this.selectedAlgorithm?.findShortestPath(0, 99);
-    console.log(this.selectedAlgorithm);
-    console.log(this.path);
+    try {
+      if (this.startNode == undefined || this.endNode == undefined)
+        throw new Error('Start or end node not defined.');
+
+      this.path = this.selectedAlgorithm?.findShortestPath(
+        this.startNode,
+        this.endNode
+      );
+    } catch (error) {
+      console.log(error);
+      throw new Error();
+    }
   }
 }

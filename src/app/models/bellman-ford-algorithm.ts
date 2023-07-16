@@ -1,4 +1,5 @@
 import { Algorithm } from '../abstract-models/algorithm';
+import { Edge } from './edge';
 
 export class BellmanFordAlgorithm extends Algorithm {
   constructor(n: number) {
@@ -6,26 +7,32 @@ export class BellmanFordAlgorithm extends Algorithm {
   }
 
   override findShortestPath(start: number, end: number): number[] {
-    this.bellmanFord();
+    this.previousNodes = [];
+    this.bellmanFord(start);
     let current = end;
-    let path = [];
-    while (current != start) {
+    let path: number[] = [];
+    while (current != undefined && current != start) {
       path.unshift(current);
       current = this.previousNodes[current];
-      console.log(path);
-      console.log(this.previousNodes)
-      if (current == undefined || current == -1) {
-        throw new Error('No path');
-      }
     }
     path.unshift(start);
+
+    // IF NO PATH
+    if (
+      path.length == 2 &&
+      this.graph[path[0]].find((e: Edge) => e.to == path[1]) == undefined
+    ) {
+      return [];
+    }
+
     return path;
   }
 
-  bellmanFord(): number[] {
+  bellmanFord(start: number): number[] {
     // Initialize
     this.distances = new Array(this.n).fill(Number.POSITIVE_INFINITY);
-    this.distances[0] = 0;
+    this.distances[start] = 0;
+    this.previousNodes = new Array(this.n).fill(null);
 
     // Relax edges repeatadly, one cycle is called an iteration. Maximum number of iterations is |V|-1
     for (let i = 0; i < this.n - 1; ++i) {
