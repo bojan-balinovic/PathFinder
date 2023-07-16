@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build --configuration production --source-map",
     "watch": "ng build --watch --configuration development",
-    "deploy":"ng deploy --base-href=/PathFinder/",
+    "deploy":"ng deploy --base-href=/PathFinder/ --configuration production",
     "test": "ng test",
     "source-map-explorer": "source-map-explorer dist/path-finder/**/*.js"
   },
