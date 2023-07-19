@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { NodeFactoryService } from './services/node-factory-service';
 
 @NgModule({
   declarations: [AppComponent, GridComponent, NavbarComponent],
@@ -22,7 +23,7 @@ import { FormsModule } from '@angular/forms';
     MatSelectModule,
     MatButtonModule,
   ],
-  providers: [],
+  providers: [NodeFactoryService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
