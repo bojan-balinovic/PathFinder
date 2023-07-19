@@ -82,4 +82,6 @@ export class ShortestPathService {
       throw new Error();
     }
   }
+
+  clearObstacles: Subject<boolean> = new Subject<boolean>();
 }

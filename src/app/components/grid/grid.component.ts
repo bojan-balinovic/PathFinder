@@ -34,6 +34,14 @@ export class GridComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedAlgorithm = this.shortestPathService.selectedAlgorithm;
+
+    // CLEAR ALL OBSTACLES ON SCREEN
+    this.shortestPathService.clearObstacles.subscribe(() => {
+      if (this.nodes === undefined || this.nodes.length == 0) return;
+      this.nodes.forEach((node: NodeUI) => {
+        node.setAccesibility(true); // IF ALL NODES ARE ACCESSIBLE, THEN THERE IS NO OBSTACLES
+      });
+    });
   }
 
   ngAfterViewInit() {
@@ -176,6 +184,7 @@ export class GridComponent implements OnInit {
       }
     }
   }
+
   refreshNodesXY() {
     let index = 0;
     for (let i = 0; i < GridComponent.rows; i++) {

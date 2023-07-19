@@ -18,4 +18,7 @@ export class NavbarComponent implements OnInit {
   changeAlgorithm(algorithm: Algorithm) {
     this.shortestPathService.setAlgorithm(algorithm);
   }
+  clearObstacles() {
+    this.shortestPathService.clearObstacles.next(true);
+  }
 }
