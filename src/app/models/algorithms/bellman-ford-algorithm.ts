@@ -1,5 +1,5 @@
-import { Algorithm } from '../abstract-models/algorithm';
-import { Edge } from './edge';
+import { Algorithm } from '../../abstract-models/algorithm';
+import { Edge } from '../edge';
 
 export class BellmanFordAlgorithm extends Algorithm {
   constructor(n: number) {

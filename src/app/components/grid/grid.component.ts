@@ -1,9 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DijkstraAlgorithm } from 'src/app/models/dijkstra-algorithm';
 import * as p5 from 'p5';
 import { NodeUI } from 'src/app/models/node-ui';
 import { Algorithm } from 'src/app/abstract-models/algorithm';
-import { BellmanFordAlgorithm } from 'src/app/models/bellman-ford-algorithm';
 import { ShortestPathService } from 'src/app/services/shortest-path.service';
 import { NodeFactoryService } from 'src/app/services/node-factory-service';
 

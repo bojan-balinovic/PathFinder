@@ -1,6 +1,5 @@
-import { Algorithm } from '../abstract-models/algorithm';
-import { Edge } from './edge';
-import { MinIndexedDHeap } from './min-indexed-d-heap';
+import { Algorithm } from 'src/app/abstract-models/algorithm';
+import { MinIndexedDHeap } from 'src/app/models/min-indexed-d-heap';
 
 export class DijkstraAlgorithm extends Algorithm {
   constructor(n: number) {

@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build --configuration production --source-map",
     "watch": "ng build --watch --configuration development",
-    "deploy":"ng deploy --base-href=/PathFinder/ --configuration production",
+    "deploy": "ng deploy --base-href=/PathFinder/ --configuration production",
     "test": "ng test",
     "source-map-explorer": "source-map-explorer dist/path-finder/**/*.js"
   },
@@ -25,6 +25,7 @@
     "bootstrap": "^5.3.0",
     "p5": "^1.6.0",
     "rxjs": "~7.5.0",
+    "simple-queue-typescript": "^2.0.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
