@@ -13,17 +13,26 @@ export class NodeUI implements NodeUIData {
 
   accessible?: boolean = true;
 
-  constructor(props?: NodeUIData) {
+  constructor(private selectedAlgorithm: Algorithm, props?: NodeUIData) {
     Object.assign(this, props);
   }
 
-  toggleAccessibility(algorithm: Algorithm) {
+  // IF ACCESSIBLE IS TRUE, THIS NODE BECOMES AN OBSTACLES.
+  // AN OBSTACLE IS A NODE THAT HAS EDGE WITH INFINITE EDGE WEIGHT.
+  toggleAccessibility() {
     this.accessible = !this.accessible;
+    this.setAccesibility(this.accessible);
+  }
+
+  // IF ACCESSIBLE IS TRUE, THIS NODE BECOMES AN OBSTACLES.
+  //AN OBSTACLE IS A NODE THAT HAS EDGE WITH INFINITE EDGE WEIGHT.
+  setAccesibility(state: boolean) {
+    this.accessible = state;
     let cost = this.accessible ? 1 : Infinity;
-    let graph = algorithm.getGraph();
+    let graph = this.selectedAlgorithm.getGraph();
     graph.forEach((node, nodeIndex) => {
       if (graph[nodeIndex].find((edge) => edge.to == this.index)) {
-        algorithm.updateEdge(nodeIndex, this.index, cost);
+        this.selectedAlgorithm.updateEdge(nodeIndex, this.index, cost);
       }
     });
     if (!this.accessible) {
