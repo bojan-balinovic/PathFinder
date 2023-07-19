@@ -5,6 +5,7 @@ import { NodeUI } from 'src/app/models/node-ui';
 import { Algorithm } from 'src/app/abstract-models/algorithm';
 import { BellmanFordAlgorithm } from 'src/app/models/bellman-ford-algorithm';
 import { ShortestPathService } from 'src/app/services/shortest-path.service';
+import { NodeFactoryService } from 'src/app/services/node-factory-service';
 
 @Component({
   selector: 'app-grid',
@@ -26,7 +27,10 @@ export class GridComponent implements OnInit {
   selectedAlgorithm: Algorithm;
   nodes: NodeUI[] = new Array<NodeUI>();
 
-  constructor(private shortestPathService: ShortestPathService) {}
+  constructor(
+    private shortestPathService: ShortestPathService,
+    private nodeFactoryService: NodeFactoryService
+  ) {}
 
   ngOnInit(): void {
     this.selectedAlgorithm = this.shortestPathService.selectedAlgorithm;
@@ -160,7 +164,7 @@ export class GridComponent implements OnInit {
       for (let j = 0; j < GridComponent.cols; j++) {
         let x = j * GridComponent.rectWidth;
         let y = i * GridComponent.rectHeight;
-        let node = new NodeUI({
+        let node = this.nodeFactoryService.getNewNode({
           x: x,
           y: y,
           index: index,
@@ -200,7 +204,7 @@ export class GridComponent implements OnInit {
             n.index != startNode.index && // DISALLOW MAKING OBSTACLES ON START NODE
             n.index != endNode.index // DISALLOW MAKING OBSTACLES ON ENDNODE
         )
-        ?.toggleAccessibility(this.selectedAlgorithm);
+        ?.toggleAccessibility();
     }
 
     // CHECK IF START ICON IS BEING DRAGGED
@@ -265,7 +269,7 @@ export class GridComponent implements OnInit {
     if (row < GridComponent.rows && col < GridComponent.cols) {
       this.nodes
         .find((n) => n.row == row && n.col == col)
-        ?.toggleAccessibility(this.selectedAlgorithm);
+        ?.toggleAccessibility();
     }
   }
   mouseReleased(p: p5): void {
