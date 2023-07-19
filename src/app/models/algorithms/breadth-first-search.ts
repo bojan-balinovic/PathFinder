@@ -7,27 +7,12 @@ export class BreadthFirstSearch extends Algorithm {
   }
 
   public findShortestPath(start: number, end: number): Array<number> {
-    let path = new Array<number>();
+    this.previousNodes = [];
     this.bfs(start);
-    path.push(end);
-    for (
-      let at = this.previousNodes[end];
-      at != null;
-      at = this.previousNodes[at]
-    ) {
-      path.push(at);
-    }
-
-    path = path.reverse();
-
-    if (path[0] == start) {
-      return path;
-    }
-    return [];
+    return this.recontstructShortestPath(start, end);
   }
 
   private bfs(start: number) {
-    this.previousNodes = new Array(this.n).fill(null);
     let q = new Queue<number>();
     q.enqueue(start);
 

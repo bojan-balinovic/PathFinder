@@ -40,8 +40,31 @@ export abstract class Algorithm {
     this.graph = graph;
   }
 
-  abstract findShortestPath(
-    start: number,
-    end: number
-  ): Array<number>;
+  abstract findShortestPath(start: number, end: number): Array<number>;
+
+  protected recontstructShortestPath(start: number, end: number) {
+    if (end < 0 || end >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    if (start < 0 || start >= this.n) {
+      throw new Error('Invalid node index');
+    }
+    let path = new Array<number>();
+
+    for (let at = end; at != null; at = this.previousNodes[at]) {
+      path.push(at);
+    }
+
+    path = path.reverse();
+
+    // IF NO PATH
+    if (
+      path.length == 2 &&
+      this.graph[path[0]].find((e: Edge) => e.to == path[1]) == undefined
+    ) {
+      return [];
+    }
+
+    return path;
+  }
 }

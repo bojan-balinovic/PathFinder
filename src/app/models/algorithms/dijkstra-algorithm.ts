@@ -8,21 +8,8 @@ export class DijkstraAlgorithm extends Algorithm {
 
   public findShortestPath(start: number, end: number): Array<number> {
     this.previousNodes = [];
-
-    if (end < 0 || end >= this.n) {
-      throw new Error('Invalid node index');
-    }
-    if (start < 0 || start >= this.n) {
-      throw new Error('Invalid node index');
-    }
-    let path = new Array<number>();
-    let dist = this.dijkstra(start, end);
-    if (dist == Number.POSITIVE_INFINITY) return path;
-    for (let at = end; at != null; at = this.previousNodes[at]) {
-      path.push(at);
-    }
-    path = path.reverse();
-    return path;
+    this.dijkstra(start, end);
+    return this.recontstructShortestPath(start, end);
   }
 
   dijkstra(start: number, end: number) {
@@ -52,8 +39,7 @@ export class DijkstraAlgorithm extends Algorithm {
           else minQ.decrease(edge.to, newDist);
         }
       });
-      if (nodeId == end) return this.distances[end];
+      if (nodeId == end) return;
     }
-    return Number.POSITIVE_INFINITY;
   }
 }

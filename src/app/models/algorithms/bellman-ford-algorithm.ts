@@ -9,26 +9,10 @@ export class BellmanFordAlgorithm extends Algorithm {
   override findShortestPath(start: number, end: number): number[] {
     this.previousNodes = [];
     this.bellmanFord(start);
-    let current = end;
-    let path: number[] = [];
-    while (current != undefined && current != start) {
-      path.unshift(current);
-      current = this.previousNodes[current];
-    }
-    path.unshift(start);
-
-    // IF NO PATH
-    if (
-      path.length == 2 &&
-      this.graph[path[0]].find((e: Edge) => e.to == path[1]) == undefined
-    ) {
-      return [];
-    }
-
-    return path;
+    return this.recontstructShortestPath(start, end);
   }
 
-  bellmanFord(start: number): number[] {
+  bellmanFord(start: number) {
     // Initialize
     this.distances = new Array(this.n).fill(Number.POSITIVE_INFINITY);
     this.distances[start] = 0;
@@ -50,7 +34,6 @@ export class BellmanFordAlgorithm extends Algorithm {
         }
       }
     }
-    return this.distances;
     // TODO: Check for negative weight cycles
   }
 }
