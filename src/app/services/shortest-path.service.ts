@@ -5,6 +5,7 @@ import { GridComponent } from '../components/grid/grid.component';
 import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
 import { Algorithm } from '../abstract-models/algorithm';
 import { BreadthFirstSearch } from '../models/algorithms/breadth-first-search';
+import { DepthFirstAlgorithm } from '../models/algorithms/depth-first-algorithm';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +40,10 @@ export class ShortestPathService {
       {
         name: 'Breadth-first search',
         algorithm: new BreadthFirstSearch(this.totalNumberOfNodes),
+      },
+      {
+        name: 'Depth-first search',
+        algorithm: new DepthFirstAlgorithm(this.totalNumberOfNodes),
       },
     ];
   }
