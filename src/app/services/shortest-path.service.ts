@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { DijkstraAlgorithm } from '../models/dijkstra-algorithm';
-import { BellmanFordAlgorithm } from '../models/bellman-ford-algorithm';
+import { DijkstraAlgorithm } from '../models/algorithms/dijkstra-algorithm';
+import { BellmanFordAlgorithm } from '../models/algorithms/bellman-ford-algorithm';
 import { GridComponent } from '../components/grid/grid.component';
 import { BehaviorSubject, Observable, Subject, Subscriber } from 'rxjs';
 import { Algorithm } from '../abstract-models/algorithm';
+import { BreadthFirstSearch } from '../models/algorithms/breadth-first-search';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,10 @@ export class ShortestPathService {
       {
         name: 'Bellman-Ford',
         algorithm: new BellmanFordAlgorithm(this.totalNumberOfNodes),
+      },
+      {
+        name: 'Breadth-first search',
+        algorithm: new BreadthFirstSearch(this.totalNumberOfNodes),
       },
     ];
   }
