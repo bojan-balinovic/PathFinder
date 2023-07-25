@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NodeFactoryService } from './services/node-factory-service';
+import { APP_BASE_HREF } from '@angular/common';
+import { baseHrefFactory } from './factories/base-href-factory';
 
 @NgModule({
   declarations: [AppComponent, GridComponent, NavbarComponent],
@@ -23,7 +25,13 @@ import { NodeFactoryService } from './services/node-factory-service';
     MatSelectModule,
     MatButtonModule,
   ],
-  providers: [NodeFactoryService],
+  providers: [
+    NodeFactoryService,
+    {
+      provide:APP_BASE_HREF,
+      useFactory:baseHrefFactory
+    }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

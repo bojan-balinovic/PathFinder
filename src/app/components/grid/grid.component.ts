@@ -1,9 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import * as p5 from 'p5';
 import { NodeUI } from 'src/app/models/node-ui';
 import { Algorithm } from 'src/app/abstract-models/algorithm';
 import { ShortestPathService } from 'src/app/services/shortest-path.service';
 import { NodeFactoryService } from 'src/app/services/node-factory-service';
+import { APP_BASE_HREF } from '@angular/common';
 
 @Component({
   selector: 'app-grid',
@@ -27,8 +28,11 @@ export class GridComponent implements OnInit {
 
   constructor(
     private shortestPathService: ShortestPathService,
-    private nodeFactoryService: NodeFactoryService
-  ) {}
+    private nodeFactoryService: NodeFactoryService,
+    @Inject(APP_BASE_HREF) private baseHref: string
+  ) {
+    console.log(this.baseHref)
+  }
 
   ngOnInit(): void {
     this.selectedAlgorithm = this.shortestPathService.selectedAlgorithm;
@@ -60,8 +64,8 @@ export class GridComponent implements OnInit {
       let prevMouseY = p.mouseY;
 
       p.preload = () => {
-        this.startIcon = p.loadImage('/assets/icons/start.png');
-        this.endIcon = p.loadImage('/assets/icons/end.png');
+        this.startIcon = p.loadImage(this.baseHref + '/assets/icons/start.png');
+        this.endIcon = p.loadImage(this.baseHref + '/assets/icons/end.png');
       };
       // SETUP P5 SKETCH
       p.setup = () => {
@@ -108,7 +112,7 @@ export class GridComponent implements OnInit {
 
         // ANIMATE OBSTACLES
         if (node.scale < 1) {
-          node.scale += 0.1;
+          node.scale += 0.2;
         } else {
           node.scale = 1;
         }
