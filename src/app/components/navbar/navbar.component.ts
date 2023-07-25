@@ -21,4 +21,7 @@ export class NavbarComponent implements OnInit {
   clearObstacles() {
     this.shortestPathService.clearObstacles.next(true);
   }
+  clearPath() {
+    this.shortestPathService.clearPath();
+  }
 }

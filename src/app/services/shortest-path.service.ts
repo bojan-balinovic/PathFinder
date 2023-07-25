@@ -94,4 +94,8 @@ export class ShortestPathService {
   }
 
   clearObstacles: Subject<boolean> = new Subject<boolean>();
+
+  clearPath() {
+    this.path = [];
+  }
 }
